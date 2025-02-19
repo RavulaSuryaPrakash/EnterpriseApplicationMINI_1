@@ -1,0 +1,21 @@
+# Ignore build files
+/build/
+/*.o
+/*.out
+/*.exe
+/*.obj
+/*.dll
+/*.so
+/*.a
+/*.lib
+/*.lo
+/*.la
+
+# Ignore CMake files
+CMakeFiles/
+CMakeCache.txt
+Makefile
+
+# Ignore dataset
+data/Motor_Vehicle_Collisions_-_Crashes_20250218.csv
+

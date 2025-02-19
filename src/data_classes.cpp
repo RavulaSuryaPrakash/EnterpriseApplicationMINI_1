@@ -17,6 +17,7 @@ CollisionRecord::CollisionRecord(int date, int time, int p_inj, int p_kill, int 
 // Load data from CSV
 void CollisionDataManager::loadFromCSV(const std::string &filename) {
     std::ifstream file(filename);
+    std::cerr << "Started Loading Data Set ....."  << std::endl;
     if (!file.is_open()) {
         std::cerr << "[Error] Unable to open file: " << filename << std::endl;
         return;
