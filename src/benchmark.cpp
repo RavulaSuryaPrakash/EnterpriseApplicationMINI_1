@@ -2,38 +2,43 @@
 #include <chrono>
 #include <vector>
 #include <numeric>
+#include <functional>  // Needed for std::function
 #include "data_classes.h"
 
-#define NUM_RUNS 100  
-long long totalTimeAll =0;
+#define NUM_RUNS 1000  
+long long totalTimeAll = 0;
+
 void benchmarkMethod(const std::string &name, std::function<void()> func) {
     std::vector<long long> times;
-    long long time =0;
+    long long time = 0;
+
     for (int i = 0; i < NUM_RUNS; i++) {
         auto start = std::chrono::high_resolution_clock::now();
         func();
         auto end = std::chrono::high_resolution_clock::now();
-        times.push_back(std::chrono::duration_cast<std::chrono::microseconds>(end - start).count());
-        time = time + std::accumulate(times.begin(), times.end(), 0LL);
+
+        long long duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+        times.push_back(duration);  
+        time += duration;           
     }
 
-    
-    std::cout << name << ": " << time/1e+6 << " Seconds (time  over " << NUM_RUNS << " runs)" << std::endl;
-    totalTimeAll =  totalTimeAll +time/1e+6;
+    std::cout << name << ": " << time / 1e+6 << " Seconds (over " << NUM_RUNS << " runs)" << std::endl;
+    totalTimeAll += time / 1e+6;  
 }
 
 int main() {
     std::vector<long long> timesToLoad;
     CollisionDataManager manager;
+
     auto start = std::chrono::high_resolution_clock::now();
     manager.loadFromCSV("../data/Motor_Vehicle_Collisions_-_Crashes_20250218.csv");
     auto end = std::chrono::high_resolution_clock::now();
-    timesToLoad.push_back(std::chrono::duration_cast<std::chrono::microseconds>(end - start).count());
-    long long time = std::accumulate(timesToLoad.begin(), timesToLoad.end(), 0LL) /1e+6;
+    long long loadDuration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
 
-    std::cout <<"Time Taken to Load Data : "<< time << " Seconds" << std::endl;
+    std::cout << "Time Taken to Load Data: " << loadDuration / 1e+6 << " Seconds" << std::endl;
     std::cout << "================== Performance Benchmark ==================" << std::endl;
 
+    // Benchmark different methods
     benchmarkMethod("Total Injuries (2023)", [&]() {
         manager.getTotalInjuriesInRange(20210101, 20231231);
     });
@@ -50,8 +55,8 @@ int main() {
         manager.getPeakAccidentHour(20230101, 20231231);
     });
 
-    totalTimeAll  = totalTimeAll+time;
-    std::cout << "Total Time for all Quries: " << totalTimeAll << " Seconds (time  over " << NUM_RUNS << " runs)"<< std::endl;
+    totalTimeAll += loadDuration / 1e+6;  // Add data load time to total
+    std::cout << "Total Time for all Queries: " << totalTimeAll << " Seconds (over " << NUM_RUNS << " runs)" << std::endl;
     std::cout << "==========================================================" << std::endl;
 
     return 0;
