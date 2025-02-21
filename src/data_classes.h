@@ -3,7 +3,10 @@
 
 #include <vector>
 #include <string>
+#include <tuple>
+#include <utility>
 
+// Class representing a single collision record.
 class CollisionRecord {
 public:
     int crash_date;      // YYYYMMDD format
@@ -21,21 +24,20 @@ public:
                     int cyc_inj, int cyc_kill, int mot_inj, int mot_kill);
 };
 
+// Class to manage collision data and provide query methods.
 class CollisionDataManager {
 private:
     std::vector<CollisionRecord> data;
 
 public:
+    // Loads collision records from a CSV file.
     void loadFromCSV(const std::string &filename);
 
-    
-    std::vector<CollisionRecord> searchByDateRange(int startDate, int endDate);
+    // Query methods updated to use OpenMP for parallelization.
     int getTotalInjuriesInRange(int startDate, int endDate);
     int getTotalFatalitiesInRange(int startDate, int endDate);
     std::vector<CollisionRecord> getMostSevereAccidents(int startDate, int endDate);
     std::pair<int, int> getPeakAccidentHour(int startDate, int endDate);
-    std::tuple<int, int, int> getInjuryBreakdown(int startDate, int endDate);
-    CollisionRecord getDeadliestAccidentOnDate(int date);
 };
 
-#endif
+#endif 
