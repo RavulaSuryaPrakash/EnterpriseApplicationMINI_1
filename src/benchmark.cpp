@@ -31,7 +31,7 @@ int main() {
     CollisionDataManager manager;
 
     auto start = std::chrono::high_resolution_clock::now();
-    manager.loadFromCSV("../data/Motor_Vehicle_Collisions_-_Crashes_20250218.csv");
+    manager.loadFromCSV("C:\\Users\\harsh\\source\\repos\\RavulaSuryaPrakash\\EnterpriseApplicationMINI_1\\data\\data.csv");
     auto end = std::chrono::high_resolution_clock::now();
     long long loadDuration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
 
